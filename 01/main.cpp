@@ -1,6 +1,6 @@
 #include <iostream>
-#include <math.h>
 #include <algorithm>
+#include <iterator>
 
 #include "numbers.dat"
 
@@ -48,12 +48,13 @@ int main(int argc, char* argv[]) {
     int right_element = std::atoi(argv[i+1]);
 
     auto left_pos  = std::find(std::begin(Data), std::end(Data), left_element );
-    auto right_pos = std::find(std::begin(Data), std::end(Data), right_element);
+    auto reversed_right_pos = std::find(std::rbegin(Data), std::rend(Data), right_element);
 
-    if(left_pos  == std::end(Data) || right_pos == std::end(Data)) {
+    if(left_pos  == std::end(Data) || reversed_right_pos == std::rend(Data)) {
       std::cout << 0 << std::endl;
       continue;
     }
+    auto right_pos = reversed_right_pos.base() - 1;
 
     int num_of_primes = 0;
     for(auto j = left_pos; j <= right_pos; ++j) {
