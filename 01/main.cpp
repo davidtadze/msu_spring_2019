@@ -15,8 +15,7 @@ bool isPrime(int x) {
   return true;
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
   if(argc % 2 != 1 || argc == 1)
     return -1;
 
