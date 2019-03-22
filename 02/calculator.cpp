@@ -105,5 +105,6 @@ void Calculator::move_pos() {
 
 int Calculator::evaluate(const std::string& expr) {
   expr_ = expr;
+  cur_pos = 0;
   return get_grammar();
 }
