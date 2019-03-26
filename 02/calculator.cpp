@@ -13,7 +13,6 @@ int Calculator::get_grammar() {
   int val = get_summation();
   if(expr_[cur_pos] == ' ') move_pos();
 
-  // 0xDEADBEEF as indicator of incorrect number
   if(  expr_.begin() + cur_pos != expr_.end()) throw std::runtime_error{"couldn't interpret input"};
 
   return val;
