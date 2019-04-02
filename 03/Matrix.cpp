@@ -9,15 +9,32 @@
 
 #include "Matrix.h"
 
+
+
+Matrix::Column::Column(const size_t arr)
+  : column_(std::vector<int>(arr)) {}
+
+Matrix::Column::Column(const size_t arr, const int value)
+  : column_(std::vector<int>(arr, value)) {}
+
+
+int& Matrix::Column::operator[] (const size_t index) {
+  return column_.at(index);
+}
+
+const int& Matrix::Column::operator[] (const size_t index) const {
+  return column_.at(index);
+}
+
 Matrix::Matrix(const size_t rows, const size_t columns)
   : rows_(rows)
   , columns_(columns)
-  , data_(std::vector<std::vector<int>>(rows_, std::vector<int>(columns_))) {}
+  , data_(std::vector<Column>(rows_, Column(columns_))) {}
 
 Matrix::Matrix(const size_t columns, const size_t rows, const int value)
   : rows_(rows)
   , columns_(columns)
-  , data_(std::vector<std::vector<int>>(rows_, std::vector<int>(columns_, value))) {}
+  , data_(std::vector<Column>(rows_, Column(columns_, value))) {}
 
 Matrix::Matrix(std::initializer_list<std::initializer_list<int>> init_list) {
   rows_ = init_list.size();
@@ -33,7 +50,7 @@ Matrix::Matrix(std::initializer_list<std::initializer_list<int>> init_list) {
   }
 #endif
 
-  data_ = std::vector<std::vector<int>>(rows_, std::vector<int>(columns_));
+  data_ = std::vector<Column>(rows_, Column(columns_));
 
   auto cur_row = init_list.begin();
   for (size_t y = 0; y < columns_; y++ , cur_row++) {
@@ -55,7 +72,18 @@ void Matrix::Dump() {
 }
 
 bool Matrix::operator==(const Matrix& matrix) const {
-  return matrix.rows_ == rows_ && matrix.columns_ == columns_ && data_ == matrix.data_;
+  if(matrix.rows_ != rows_ || matrix.columns_ != columns_)
+    return false;
+
+  for (size_t y = 0; y < rows_; y++) {
+    for (size_t x = 0; x < columns_; x++) {
+      if(data_[y][x] != matrix.data_[y][x]) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 bool Matrix::operator!=(const Matrix& matrix) const {
@@ -151,7 +179,7 @@ Matrix Matrix::operator/(const int scalar) const {
   return tmp_matrix /= scalar;
 }
 
-std::vector<int>& Matrix::operator[](const size_t row) {
+Matrix::Column& Matrix::operator[](const size_t row) {
   if(row >= rows_) {
     throw std::out_of_range("expected row < matrix.rows_");
   }
@@ -159,7 +187,7 @@ std::vector<int>& Matrix::operator[](const size_t row) {
   return data_[row];
 }
 
-const std::vector<int>& Matrix::operator[](const size_t row) const {
+const Matrix::Column& Matrix::operator[](const size_t row) const {
   if(row >= rows_) {
     throw std::out_of_range("expected row < matrix.rows_");
   }

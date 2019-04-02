@@ -9,16 +9,24 @@
 
 class Matrix {
  private:
+  struct Column {
+    std::vector<int> column_;
+
+    Column(const size_t arr);
+    Column(const size_t arr, const int value);
+
+    int& operator[] (const size_t index);
+    const int& operator[] (const size_t index) const;
+  };
+
   size_t rows_;
   size_t columns_;
 
-  std::vector<std::vector<int>> data_;
+  std::vector<Column> data_;
 
  public:
   Matrix(const size_t rows, const size_t columns);
   Matrix(const size_t rows, const size_t columns, const int value);
-
-  Matrix(const Matrix& matrix) = default;
 
   Matrix(std::initializer_list<std::initializer_list<int>> init_list);
 
@@ -44,8 +52,8 @@ class Matrix {
   Matrix& operator/=(const int scalar);
   Matrix  operator/ (const int scalar) const;
 
-  std::vector<int>& operator[] (const size_t row);
-  const std::vector<int>& operator[] (const size_t row) const;
+  Column& operator[] (const size_t row);
+  const Column& operator[] (const size_t row) const;
 
   size_t getRows() const;
   size_t getColumns() const;
