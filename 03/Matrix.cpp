@@ -9,15 +9,12 @@
 
 #include "Matrix.h"
 
-
-
 Matrix::Column::Column(const size_t arr)
-  : column_(std::vector<int>(arr)) {}
+  : column_(arr) {}
 
 Matrix::Column::Column(const size_t arr, const int value)
-  : column_(std::vector<int>(arr, value)) {}
-
-
+  : column_(arr, value) {}
+  
 int& Matrix::Column::operator[] (const size_t index) {
   return column_.at(index);
 }
@@ -29,12 +26,12 @@ const int& Matrix::Column::operator[] (const size_t index) const {
 Matrix::Matrix(const size_t rows, const size_t columns)
   : rows_(rows)
   , columns_(columns)
-  , data_(std::vector<Column>(rows_, Column(columns_))) {}
+  , data_(rows_, Column(columns_)) {}
 
 Matrix::Matrix(const size_t columns, const size_t rows, const int value)
   : rows_(rows)
   , columns_(columns)
-  , data_(std::vector<Column>(rows_, Column(columns_, value))) {}
+  , data_(rows_, Column(columns_, value)) {}
 
 Matrix::Matrix(std::initializer_list<std::initializer_list<int>> init_list) {
   rows_ = init_list.size();
