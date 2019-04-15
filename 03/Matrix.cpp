@@ -14,7 +14,7 @@ Matrix::Column::Column(const size_t arr)
 
 Matrix::Column::Column(const size_t arr, const int value)
   : column_(arr, value) {}
-  
+
 int& Matrix::Column::operator[] (const size_t index) {
   return column_.at(index);
 }
