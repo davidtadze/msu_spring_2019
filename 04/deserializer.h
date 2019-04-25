@@ -20,13 +20,19 @@ class Deserializer {
     return object.serialize(*this);
   }
 
-  template <class... ArgsT>
-  Error operator()(ArgsT&... args) {
-    return process(args...);
+  template<class... Args>
+  Error operator()(Args&&... args) {
+    return process(std::forward<Args>(args)...);
   }
 
  private:
   std::istream& in_;
+
+  template <class T, class... Args>
+  Error process(T&& val, Args&&... args) {
+    if(process(std::forward<T>(val)) == Error::CorruptedArchive) return Error::CorruptedArchive;
+    return process(std::forward<Args>(args)...);
+  }
 
   bool is_number(const std::string& s) {
     return !s.empty()
@@ -37,14 +43,11 @@ class Deserializer {
     std::string text;
     in_ >> text;
 
-    if (text == "true") {
+    if (text == "true")
       val = true;
-    }
     else if (text == "false")
       val = false;
     else
-      //std::cout << "oops!!" << std::endl;
-      //std::cout << "text = " << text << std::endl;
       return Error::CorruptedArchive;
 
     return Error::NoError;
@@ -54,22 +57,12 @@ class Deserializer {
     std::string text;
     in_ >> text;
 
-    if (is_number(text)) {
+    if (is_number(text))
       val = std::stoi(text);
-    }
     else
       return Error::CorruptedArchive;
 
     return Error::NoError;
-  }
-
-  template <class T, class... Args>
-  Error process(T&& val, Args&&... args) {
-    Error err = process(val);
-    if(err == Error::NoError)
-      err = process(std::forward<Args>(args)...);
-
-    return err;
   }
 };
 

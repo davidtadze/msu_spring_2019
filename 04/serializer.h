@@ -20,13 +20,24 @@ public:
     return object.serialize(*this);
   }
 
-  template <class... ArgsT>
-  Error operator()(ArgsT... args) {
-    return process(args...);
+  template<class... Args>
+  Error operator()(Args&&... args) {
+    return process(std::forward<Args>(args)...);
   }
 
 private:
   std::ostream& out_;
+
+  template <class T, class... Args>
+  Error process(T&& val, Args&&... args) {
+    const Error err = process(std::forward<T>(val));
+    if(err == Error::NoError)
+      process(std::forward<Args>(args)...);
+    else
+      return Error::CorruptedArchive;
+
+    return Error::NoError;
+  }
 
   template <class T>
   Error process(T&& val) {
@@ -34,32 +45,16 @@ private:
   }
 
   Error process(bool& val) {
-    std::string text;
-
     if (val)
-      text = "true";
+      out_ << "true" << Separator;
     else
-      text = "false";
+      out_ << "false" << Separator;
 
-    out_ << text << Separator;
     return Error::NoError;
   }
 
   Error process(uint64_t& val) {
-    std::string text(std::to_string(val));
-
-    out_ << text << Separator;
-    return Error::NoError;
-  }
-
-  template <class T, class... Args>
-  Error process(T&& val, Args&&... args) {
-    const Error err = process(val);
-    if(err == Error::NoError)
-      process(std::forward<Args>(args)...);
-    else
-      return Error::CorruptedArchive;
-
+    out_ << std::to_string(val) << Separator;
     return Error::NoError;
   }
 };

@@ -42,20 +42,13 @@ int main()
   Deserializer d2(s2);
   checkTrue(d2.load(y) == Error::CorruptedArchive);
 
-  // puts("HERE!");
-  // std::cout << y.a << y.b << y.c << std::endl;
-
   auto s3 = std::stringstream("1 2 3");
   Deserializer d3(s3);
   checkTrue(d3.load(y) == Error::CorruptedArchive);
 
-  // std::cout << y.a << y.b << y.c << std::endl;
-
   auto s4 = std::stringstream("1 true -3");
   Deserializer d4(s4);
   checkTrue(d4.load(y) == Error::CorruptedArchive);
-
-  // std::cout << y.a << y.b << y.c << std::endl;
 
   auto s5 = std::stringstream("false 1");
   Deserializer d5(s5);
