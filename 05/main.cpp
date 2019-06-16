@@ -7,8 +7,8 @@ const int MAX_HITS = 100000;
 std::mutex m;
 int counter = 0;
 
-void ping(){
-  while(counter < MAX_HITS - 1){
+void ping() {
+  while(counter < MAX_HITS - 1) {
     if(counter % 2 == 0){
       std::lock_guard<std::mutex> lock(m);
       std::cout << "ping" << std::endl;
@@ -20,8 +20,8 @@ void ping(){
   }
 }
 
-void pong(){
-  while(counter < MAX_HITS){
+void pong() {
+  while(counter < MAX_HITS) {
     if(counter % 2 == 1){
       std::lock_guard<std::mutex> lock(m);
       std::cout << "pong" << std::endl;
@@ -33,7 +33,7 @@ void pong(){
   }
 }
 
-int main(){
+int main() {
   std::thread t1(ping);
   std::thread t2(pong);
 
