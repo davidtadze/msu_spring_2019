@@ -33,7 +33,6 @@ void pong(){
   }
 }
 
-
 int main(){
   std::thread t1(ping);
   std::thread t2(pong);
