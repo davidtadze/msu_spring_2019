@@ -2,7 +2,7 @@
 #include<thread>
 #include<iostream>
 
-const int MAX_HITS = 100;
+const int MAX_HITS = 100000;
 
 std::mutex m;
 int counter = 0;
