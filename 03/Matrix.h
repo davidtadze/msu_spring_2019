@@ -10,13 +10,13 @@
 class Matrix {
  private:
   struct Column {
-    std::vector<int> column_;
+    std::vector<double> column_;
 
     Column(const size_t arr);
-    Column(const size_t arr, const int value);
+    Column(const size_t arr, const double value);
 
-    int& operator[] (const size_t index);
-    const int& operator[] (const size_t index) const;
+    double& operator[] (const size_t index);
+    const double& operator[] (const size_t index) const;
   };
 
   size_t rows_;
@@ -26,9 +26,9 @@ class Matrix {
 
  public:
   Matrix(const size_t rows, const size_t columns);
-  Matrix(const size_t rows, const size_t columns, const int value);
+  Matrix(const size_t rows, const size_t columns, const double value);
 
-  Matrix(std::initializer_list<std::initializer_list<int>> init_list);
+  Matrix(std::initializer_list<std::initializer_list<double>> init_list);
 
   void Dump();
 
@@ -40,20 +40,23 @@ class Matrix {
   Matrix& operator+=(const Matrix& matrix);
   Matrix  operator+ (const Matrix& matrix) const;
 
-  Matrix& operator+=(const int scalar);
-  Matrix  operator+ (const int scalar) const;
+  Matrix& operator+=(const double scalar);
+  Matrix  operator+ (const double scalar) const;
 
   Matrix& operator*=(const Matrix& matrix);
   Matrix  operator* (const Matrix& matrix) const;
 
-  Matrix& operator*=(const int scalar);
-  Matrix  operator* (const int scalar) const;
+  Matrix& operator*=(const double scalar);
+  Matrix  operator* (const double scalar) const;
 
-  Matrix& operator/=(const int scalar);
-  Matrix  operator/ (const int scalar) const;
+  Matrix& operator/=(const double scalar);
+  Matrix  operator/ (const double scalar) const;
 
   Column& operator[] (const size_t row);
   const Column& operator[] (const size_t row) const;
+
+  void deleteRow(size_t row_num);
+  void deleteColumn(size_t col_num);
 
   size_t getRows() const;
   size_t getColumns() const;

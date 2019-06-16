@@ -7,19 +7,19 @@
 #include <stdexcept>
 #include <iostream>
 
-#include "Matrix.h"
+#include "matrix.h"
 
 Matrix::Column::Column(const size_t arr)
   : column_(arr) {}
 
-Matrix::Column::Column(const size_t arr, const int value)
+Matrix::Column::Column(const size_t arr, const double value)
   : column_(arr, value) {}
 
-int& Matrix::Column::operator[] (const size_t index) {
+double& Matrix::Column::operator[] (const size_t index) {
   return column_.at(index);
 }
 
-const int& Matrix::Column::operator[] (const size_t index) const {
+const double& Matrix::Column::operator[] (const size_t index) const {
   return column_.at(index);
 }
 
@@ -28,12 +28,12 @@ Matrix::Matrix(const size_t rows, const size_t columns)
   , columns_(columns)
   , data_(rows_, Column(columns_)) {}
 
-Matrix::Matrix(const size_t columns, const size_t rows, const int value)
+Matrix::Matrix(const size_t columns, const size_t rows, const double value)
   : rows_(rows)
   , columns_(columns)
   , data_(rows_, Column(columns_, value)) {}
 
-Matrix::Matrix(std::initializer_list<std::initializer_list<int>> init_list) {
+Matrix::Matrix(std::initializer_list<std::initializer_list<double>> init_list) {
   rows_ = init_list.size();
 
 #ifndef NDEBUG
@@ -108,7 +108,7 @@ Matrix Matrix::operator+(const Matrix& matrix) const {
   return tmp_matrix += matrix;
 }
 
-Matrix& Matrix::operator+=(const int scalar) {
+Matrix& Matrix::operator+=(const double scalar) {
   for (size_t y = 0; y < rows_; y++) {
     for (size_t x = 0; x < columns_; x++) {
       data_[y][x] += scalar;
@@ -118,7 +118,7 @@ Matrix& Matrix::operator+=(const int scalar) {
   return *this;
 }
 
-Matrix Matrix::operator+(const int scalar) const {
+Matrix Matrix::operator+(const double scalar) const {
   Matrix tmp_matrix = *this;
   return tmp_matrix += scalar;
 }
@@ -146,7 +146,7 @@ Matrix Matrix::operator*(const Matrix& matrix) const {
   return tmp_matrix *= matrix;
 }
 
-Matrix& Matrix::operator*=(const int scalar) {
+Matrix& Matrix::operator*=(const double scalar) {
   for (size_t y = 0; y < rows_; y++) {
     for (size_t x = 0; x < columns_; x++) {
       data_[y][x] *= scalar;
@@ -156,12 +156,12 @@ Matrix& Matrix::operator*=(const int scalar) {
   return *this;
 }
 
-Matrix Matrix::operator*(const int scalar) const {
+Matrix Matrix::operator*(const double scalar) const {
   Matrix tmp_matrix = *this;
   return tmp_matrix *= scalar;
 }
 
-Matrix& Matrix::operator/=(const int scalar) {
+Matrix& Matrix::operator/=(const double scalar) {
   for (size_t y = 0; y < rows_; y++) {
     for (size_t x = 0; x < columns_; x++) {
       data_[y][x] /= scalar;
@@ -171,7 +171,7 @@ Matrix& Matrix::operator/=(const int scalar) {
   return *this;
 }
 
-Matrix Matrix::operator/(const int scalar) const {
+Matrix Matrix::operator/(const double scalar) const {
   Matrix tmp_matrix = *this;
   return tmp_matrix /= scalar;
 }
@@ -190,6 +190,22 @@ const Matrix::Column& Matrix::operator[](const size_t row) const {
   }
 
   return data_[row];
+}
+
+void deleteRow(size_t row_num) {
+  if(row_num > rows_)
+    throw std::runtime_error("row_num is too big");
+
+  for(auto &i : data_) {
+    i.column_.erase(column_.begin() + row_num);
+  }
+}
+
+void deleteColumn(size_t col_num) {
+  if(col_num > columns_)
+    throw std::runtime_error("col_num is too big");
+
+  data_.erase(data_.begin() + col_num);
 }
 
 size_t Matrix::getColumns() const {

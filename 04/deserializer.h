@@ -58,7 +58,7 @@ class Deserializer {
     in_ >> text;
 
     if (is_number(text))
-      val = std::stoi(text);
+      val = std::stoull(text);
     else
       return Error::CorruptedArchive;
 

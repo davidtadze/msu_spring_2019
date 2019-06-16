@@ -44,7 +44,7 @@ private:
     return Error::CorruptedArchive;
   }
 
-  Error process(bool& val) {
+  Error process(bool val) {
     if (val)
       out_ << "true" << Separator;
     else
@@ -53,8 +53,8 @@ private:
     return Error::NoError;
   }
 
-  Error process(uint64_t& val) {
-    out_ << std::to_string(val) << Separator;
+  Error process(uint64_t val) {
+    out_ << val << Separator;
     return Error::NoError;
   }
 };
