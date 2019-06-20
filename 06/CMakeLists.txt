@@ -3,4 +3,4 @@ project(06)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(06 main.cpp external_sort.hpp)
+add_executable(06 main.cpp external_sort.hpp external_sort.cpp)
