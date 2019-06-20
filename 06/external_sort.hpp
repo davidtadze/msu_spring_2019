@@ -20,13 +20,18 @@
 #include <algorithm>
 #include <sys/stat.h>
 
-const uint64_t RAM_SIZE  = 500 * sizeof(uint64_t);
+const uint64_t RAM_SIZE  = 1000 * sizeof(uint64_t);
 
 void read_chunk(std::ifstream* in_file, size_t chunk_size, std::vector<uint64_t>* buffer) {
   uint64_t buffer_value;
 
   for (size_t i = 0; i < chunk_size; ++i) {
-    if (*in_file >> buffer_value) (*buffer)[i] = buffer_value;
+    if (*in_file >> buffer_value) {
+      (*buffer)[i] = buffer_value;
+    }
+    else {
+      (*buffer)[i] = std::numeric_limits<uint64_t>::max();
+    }
   }
 }
 
