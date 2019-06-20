@@ -17,8 +17,27 @@
 #include <algorithm>
 #include <sys/stat.h>
 #include <memory>
+#include <future>
 
 const uint64_t RAM_SIZE  = 1000 * sizeof(uint64_t);
+const uint64_t NB_THREADS = 2;
+
+void parallel_sort(std::vector<uint64_t>* data, size_t left, size_t right) {
+  int min_len = std::max(256, int((right - left)/NB_THREADS));
+
+  if(right - left < min_len) {
+    std::sort(data->begin() + left, data->begin() + right);
+  } else if (left < right) {
+    size_t mid = (left + right)/2;
+
+    auto future = std::async(parallel_sort, data, left, mid);
+    parallel_sort(data, mid + 1,  right);
+
+    future.wait();
+
+    std::inplace_merge(data->begin() + left, data->begin() + mid, data->begin() + right);
+  }
+}
 
 void read_chunk(std::ifstream& in_file, size_t chunk_size, std::vector<uint64_t>& buffer) {
   uint64_t buffer_value;
@@ -49,7 +68,8 @@ uint64_t sort_chunks(const std::string& in_filename, const std::string& out_dir)
   while (in_file.peek() != EOF) {
     read_chunk(in_file, chunk_size, buffer);
 
-    std::sort(buffer.begin(), buffer.end());
+    //std::sort(buffer.begin(), buffer.end());
+    parallel_sort(&buffer, 0, buffer.size() - 1);
 
     std::ofstream out_file(out_dir + std::string("out") + std::to_string(counter) + std::string(".txt"));
     for (const auto &element : buffer) out_file << element << "\n";
